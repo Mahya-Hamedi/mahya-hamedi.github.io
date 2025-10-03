@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>رزومه — نام شما</title>
+  <meta name="description" content="رزومهٔ شخصی و نمونه‌کارها" />
+  <meta property="og:title" content="رزومه — نام شما" />
+  <meta property="og:description" content="رزومهٔ شخصی و نمونه‌کارها" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fa_IR" />
+  <style>
+    :root{
+      --bg: #0b1020;
+      --card: #111936;
+      --text: #E6E9F2;
+      --muted: #9aa4bf;
+      --accent: #7aa2f7;
+      --chip: #1b2448;
+      --border: #263254;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(180deg, #0b1020 0%, #0f1430 100%);
+      color:var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, "Vazirmatn", "Vazir", Tahoma, sans-serif;
+      line-height:1.7; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    .wrap{max-width:960px; margin:0 auto; padding:24px}
+    header{
+      background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:20px; padding:28px; backdrop-filter: blur(6px);
+      display:grid; grid-template-columns: 96px 1fr; gap:20px; align-items:center;
+    }
+    .avatar{width:96px; height:96px; border-radius:18px; background:#cbd5e1 url('avatar.png') center/cover no-repeat; border:1px solid var(--border)}
+    h1{margin:0 0 6px; font-size:28px}
+    .subtitle{margin:0; color:var(--muted)}
+    .links{margin-top:10px; display:flex; flex-wrap:wrap; gap:10px}
+    .chip{background:var(--chip); color:var(--text); padding:8px 12px; border-radius:999px; border:1px solid var(--border); font-size:14px}
+
+    section{margin-top:22px; background:var(--card); border:1px solid var(--border); border-radius:18px; padding:22px}
+    section h2{margin:0 0 14px; font-size:20px}
+
+    .item{display:grid; grid-template-columns: 1fr auto; gap:6px; padding:12px 0; border-bottom:1px dashed var(--border)}
+    .item:last-child{border-bottom:none}
+    .item .when{color:var(--muted); font-size:14px}
+    .item .where{color:var(--muted); font-size:14px}
+    .item h3{margin:0 0 6px; font-size:18px}
+    .tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+    .tag{font-size:12px; padding:6px 10px; background:var(--chip); border:1px solid var(--border); border-radius:999px}
+
+    .two-col{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+    @media (max-width: 720px){
+      header{grid-template-columns: 64px 1fr}
+      .avatar{width:64px;height:64px;border-radius:12px}
+      .two-col{grid-template-columns:1fr}
+    }
+
+    footer{margin:20px 0 40px; color:var(--muted); font-size:14px; text-align:center}
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* برای پرینت به PDF */
+    @media print{
+      body{background:white; color:#111}
+      header, section{background:white; border:1px solid #ddd}
+      .chip,.tag{background:#f3f4f6; border-color:#e5e7eb}
+      a{color:#0b5fff}
+    }
+    .ltr{direction:ltr}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="avatar" aria-hidden="true"></div>
+      <div>
+        <h1>نام و نام‌خانوادگی</h1>
+        <p class="subtitle">عنوان شغلی / زمینهٔ تخصصی (مثلاً: مدیر محصول در حوزهٔ سلامت دیجیتال)</p>
+        <div class="links">
+          <span class="chip ltr">📧 <a href="mailto:you@example.com" class="ltr">you@example.com</a></span>
+          <span class="chip ltr">🔗 <a class="ltr" href="https://www.linkedin.com/in/your-id" target="_blank" rel="noopener">LinkedIn</a></span>
+          <span class="chip ltr">🐙 <a class="ltr" href="https://github.com/your-username" target="_blank" rel="noopener">GitHub</a></span>
+          <span class="chip"><a href="resume.pdf" download>⬇️ دانلود PDF رزومه</a></span>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2>چکیدهٔ کوتاه</h2>
+      <p>در ۳–۴ جمله، ارزش پیشنهادی خودتان را شفاف بگویید: تخصص‌ها، حوزهٔ تمرکز، دستاورد کلیدی و آنچه به تیم/سازمان اضافه می‌کنید.</p>
+    </section>
+
+    <section>
+      <h2>سوابق کاری</h2>
+      <div class="item">
+        <div>
+          <h3>عنوان شغلی — نام سازمان</h3>
+          <div class="where">تهران • تمام‌وقت</div>
+          <ul>
+            <li>دستاورد قابل‌سنجش (مثلاً ۲۰٪ رشد، کاهش ۳۰٪ هزینه، …)</li>
+            <li>مسئولیت/پروژهٔ شاخص و نتیجهٔ آن</li>
+          </ul>
+          <div class="tags">
+            <span class="tag">Product</span>
+            <span class="tag">Data</span>
+            <span class="tag">AI</span>
+          </div>
+        </div>
+        <div class="when">1402–اکنون</div>
+      </div>
+      <div class="item">
+        <div>
+          <h3>عنوان شغلی — سازمان قبلی</h3>
+          <div class="where">شیراز • پاره‌وقت</div>
+          <ul>
+            <li>یک خروجی کلیدی با عدد</li>
+            <li>یک همکاری/نقش برجسته</li>
+          </ul>
+        </div>
+        <div class="when">1399–1402</div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div>
+        <h2>پروژه‌ها / نمونه‌کارها</h2>
+        <ul>
+          <li><a href="#">نام پروژه</a> — توضیح یک‌خطی و تکنولوژی‌ها</li>
+          <li><a href="#">نام پروژه</a> — مسئله، راه‌حل، اثر</li>
+        </ul>
+      </div>
+      <div>
+        <h2>مهارت‌ها</h2>
+        <p>Product • UX • SQL • Python • ML • FHIR/HL7 • Jira • GA4 • …</p>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div>
+        <h2>تحصیلات</h2>
+        <p><strong>کارشناسی ارشد — رشته</strong>، دانشگاه، سال</p>
+        <p><strong>کارشناسی — رشته</strong>، دانشگاه، سال</p>
+      </div>
+      <div>
+        <h2>انتشارات/افتخارات</h2>
+        <ul>
+          <li>مقالهٔ علمی، کنفرانس/ژورنال (سال) — <span class="ltr">DOI/Link</span></li>
+          <li>جایزه/فلوشیپ/بورسیه</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      ساخته‌شده با GitHub Pages — به‌روزرسانی: <span id="today"></span>
+    </footer>
+  </div>
+
+  <script>
+    // تاریخ امروز برای فوتر
+    (function(){
+      const d=new Date();
+      const f=new Intl.DateTimeFormat('fa-IR', {year:'numeric', month:'long', day:'2-digit'}).format(d);
+      document.getElementById('today').textContent=f;
+    })();
+  </script>
+</body>
+</html>
