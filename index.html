@@ -12,7 +12,7 @@
     :root{
       /* Light mode tokens */
       --bg1:#f6f8ff; --bg2:#ffffff; --text:#0f1230; --muted:#55607a; --stroke:#e1e6fb; --glass:rgba(10,16,45,.05);
-      --card: #ffffff; --accent:#3b82f6; --violet:#7c3aed; --pink:#ec4899; --cyan:#06b6d4; --lime:#65b336; --amber:#f59e0b;
+      --card:#ffffff; --accent:#3b82f6; --violet:#7c3aed; --pink:#ec4899; --cyan:#06b6d4; --lime:#65b336; --amber:#f59e0b;
       --chip-bg:#eef2ff; --chip-stroke:#e2e7ff;
     }
     :root.dark{
@@ -97,6 +97,7 @@
   </style>
 </head>
 <body>
+  <noscript>This site requires JavaScript to run the tabs and theme toggle.</noscript>
   <div class="stars"></div><div class="stars2"></div><div class="stars3"></div>
   <div class="wrap">
 
@@ -311,401 +312,100 @@
   </div>
 
   <script>
-    // --- Tabs logic with ARIA ---
-    const tabs = document.querySelectorAll('.tab');
-    const panels = document.querySelectorAll('.panel');
-    function activateTab(id){
-      tabs.forEach(t=>{const sel = t.id === 'tab-'+id; t.setAttribute('aria-selected', sel);});
-      panels.forEach(p=>{p.classList.toggle('active', p.id === 'panel-'+id)});
-      // persist
-      try{localStorage.setItem('activeTab', id)}catch(e){}
-    }
-    tabs.forEach(t=>{
-      t.addEventListener('click', ()=>activateTab(t.id.replace('tab-','')));
-      t.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); activateTab(t.id.replace('tab-','')); }});
-    });
-    // restore last tab
-    (function(){
-      const last = (localStorage.getItem('activeTab')||'summary');
-      if(last!=='summary') activateTab(last);
-    })();
+    // Wrap logic in an IIFE to avoid global re-declarations
+    (()=>{
+      // --- Tabs logic with ARIA ---
+      const tabs = document.querySelectorAll('.tab');
+      const panels = document.querySelectorAll('.panel');
+      const tabIds = Array.from(tabs).map(t=>t.id.replace('tab-',''));
 
-    // --- Theme toggle (light/dark) with prefers-color-scheme ---
-    const root = document.documentElement;
-    const switchEl = document.getElementById('themeSwitch');
-    function applyTheme(mode){
-      if(mode==='dark'){root.classList.add('dark'); switchEl.setAttribute('aria-pressed','true');}
-      else{root.classList.remove('dark'); switchEl.setAttribute('aria-pressed','false');}
-    }
-    (function(){
-      const saved = localStorage.getItem('colorMode');
-      if(saved){ applyTheme(saved); }
-      else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){ applyTheme('dark'); }
-    })();
-    function toggleTheme(){ const dark = root.classList.toggle('dark'); applyTheme(dark?'dark':'light'); try{localStorage.setItem('colorMode', dark?'dark':'light')}catch(e){} }
-    switchEl.addEventListener('click', toggleTheme);
-    switchEl.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleTheme(); }});
+      function activateTab(id,{focusTab=false}={}){
+        tabs.forEach(t=>{
+          const sel = t.id === 'tab-'+id;
+          t.setAttribute('aria-selected', sel);
+          if(sel && focusTab) t.focus();
+        });
+        panels.forEach(p=>{ p.classList.toggle('active', p.id === 'panel-'+id); });
+        // persist
+        try{ localStorage.setItem('activeTab', id); }catch(e){}
+        // reflect in hash (nice for sharing links)
+        if(location.hash !== '#'+id){
+          history.replaceState(null, '', '#'+id);
+        }
+      }
 
-    // footer date
-    (function(){
-      const d=new Date();
-      document.getElementById('today').textContent = d.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'2-digit'});
-    })();
-  </script>
-</body>
-</html>
-<!doctype html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mahya Hamedi — Portfolio & Resume</title>
-  <meta name="description" content="Digital Product Manager & AI‑in‑Health Researcher" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      /* Light mode tokens */
-      --bg1:#f6f8ff; --bg2:#ffffff; --text:#0f1230; --muted:#55607a; --stroke:#e1e6fb; --glass:rgba(10,16,45,.05);
-      --card: #ffffff; --accent:#3b82f6; --violet:#7c3aed; --pink:#ec4899; --cyan:#06b6d4; --lime:#65b336; --amber:#f59e0b;
-      --chip-bg:#eef2ff; --chip-stroke:#e2e7ff;
-    }
-    :root.dark{
-      /* Dark mode tokens */
-      --bg1:#050516; --bg2:#0a0a2a; --text:#eaf0ff; --muted:#a9b3d1; --stroke:rgba(255,255,255,.12); --glass:rgba(255,255,255,.06);
-      --card:#0f1338; --accent:#8ab4ff; --violet:#b388ff; --pink:#ff7ad9; --cyan:#7efaff; --lime:#c8ff7a; --amber:#ffd27a;
-      --chip-bg:rgba(138,180,255,.12); --chip-stroke:rgba(255,255,255,.16);
-    }
+      tabs.forEach((t,idx)=>{
+        t.addEventListener('click', ()=>activateTab(t.id.replace('tab-','')));
+        t.addEventListener('keydown', e=>{
+          const key = e.key;
+          if(key==='Enter' || key===' '){ e.preventDefault(); activateTab(t.id.replace('tab-','')); }
+          // Arrow navigation
+          if(key==='ArrowRight' || key==='ArrowLeft'){
+            e.preventDefault();
+            const dir = key==='ArrowRight' ? 1 : -1;
+            const next = (idx + dir + tabs.length) % tabs.length;
+            activateTab(tabs[next].id.replace('tab-',''), {focusTab:true});
+          }
+        });
+      });
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
-      background:
-        radial-gradient(1200px 800px at 80% -10%, #7c3aed11 0%, transparent 60%),
-        radial-gradient(900px 700px at 10% 0%, #06b6d411 0%, transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));}
+      // restore last tab (hash wins, then localStorage)
+      const fromHash = location.hash && location.hash.slice(1);
+      const saved = !fromHash && localStorage.getItem('activeTab');
+      const initial = (fromHash && tabIds.includes(fromHash)) ? fromHash : (saved && tabIds.includes(saved) ? saved : 'summary');
+      if(initial !== 'summary') activateTab(initial);
 
-    /* Galaxy starfields */
-    .stars,.stars2,.stars3{position:fixed; inset:0; pointer-events:none; z-index:-1; background-repeat:repeat; background-position:0 0}
-    .stars{background-image:radial-gradient(2px 2px at 20px 30px,#fff8 60%,transparent 61%),radial-gradient(1px 1px at 100px 200px,#fff5 60%,transparent 61%),radial-gradient(1px 1px at 300px 400px,#fff5 60%,transparent 61%); animation:drift 120s linear infinite; opacity:.45}
-    .stars2{background-image:radial-gradient(2px 2px at 50px 80px,#c0f7ff88 60%,transparent 61%),radial-gradient(1.5px 1.5px at 250px 120px,#ffc0ff77 60%,transparent 61%); animation:drift 180s linear infinite reverse; opacity:.35}
-    .stars3{background-image:radial-gradient(1.5px 1.5px at 150px 60px,#b3ff7a66 60%,transparent 61%),radial-gradient(1px 1px at 400px 300px,#7efaff66 60%,transparent 61%); animation:drift 240s linear infinite; opacity:.25}
-    @keyframes drift{from{background-position:0 0} to{background-position:-2000px 2000px}}
+      // --- Theme toggle (light/dark) with prefers-color-scheme ---
+      const root = document.documentElement;
+      const switchEl = document.getElementById('themeSwitch');
+      function applyTheme(mode){
+        if(mode==='dark'){ root.classList.add('dark'); switchEl.setAttribute('aria-pressed','true'); }
+        else { root.classList.remove('dark'); switchEl.setAttribute('aria-pressed','false'); }
+      }
+      (function(){
+        const savedMode = localStorage.getItem('colorMode');
+        if(savedMode){ applyTheme(savedMode); }
+        else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){ applyTheme('dark'); }
+      })();
+      function toggleTheme(){
+        const dark = root.classList.toggle('dark');
+        applyTheme(dark?'dark':'light');
+        try{ localStorage.setItem('colorMode', dark?'dark':'light'); }catch(e){}
+      }
+      switchEl.addEventListener('click', toggleTheme);
+      switchEl.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleTheme(); }});
 
-    .wrap{max-width:1180px; margin:0 auto; padding:18px}
+      // footer date
+      (function(){
+        const d=new Date();
+        document.getElementById('today').textContent = d.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'2-digit'});
+      })();
 
-    /* Banner */
-    .banner{position:relative; border-radius:22px; overflow:hidden; border:1px solid var(--stroke); background:linear-gradient(180deg, #131845, #0a0f2d);}    
-    .banner-img{width:100%; height:min(34vw,320px); object-fit:cover; display:block; filter:saturate(1.2) contrast(1.05)}
-    .banner-glow{position:absolute; inset:0; background: radial-gradient(700px 200px at 20% 0%, var(--cyan)11, transparent 70%), radial-gradient(700px 200px at 80% 0%, var(--pink)11, transparent 70%);}    
-
-    header.profile{display:grid; grid-template-columns:110px 1fr auto; gap:18px; align-items:end; padding:16px 18px 22px; margin-top:-70px}
-    @media (max-width:720px){header.profile{grid-template-columns:80px 1fr; grid-template-areas:"av name" "act act"; gap:12px}}
-    .avatar{grid-area:av; width:110px; height:110px; border-radius:22px; border:2px solid var(--stroke); background:#111 url('avatar.jpg') center/cover no-repeat; box-shadow:0 10px 30px #0003}
-    h1{margin:0; font-size:clamp(24px,3.2vw,38px); letter-spacing:.2px}
-    .subtitle{margin:6px 0 0; color:var(--muted)}
-
-    .actions{grid-area:act; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .btn{padding:10px 14px; border-radius:999px; border:1px solid var(--stroke); background:var(--glass); color:var(--text); text-decoration:none; font-weight:600}
-    .btn.primary{background:linear-gradient(90deg, var(--accent), var(--violet)); color:#0b0f2a}
-
-    /* Tabs */
-    .tabs{margin-top:16px; border-radius:18px; border:1px solid var(--stroke); overflow:hidden; background:var(--card)}
-    .tablist{display:flex; flex-wrap:wrap; gap:8px; padding:10px; background:linear-gradient(180deg, var(--card), rgba(255,255,255,.02)); position:sticky; top:0; z-index:5}
-    .tab{appearance:none; border:1px solid var(--chip-stroke); background:var(--chip-bg); color:var(--text); padding:10px 14px; border-radius:999px; font-weight:600; cursor:pointer}
-    .tab[aria-selected="true"]{border-color:transparent; color:#0b0f2a; background:linear-gradient(90deg, var(--accent), var(--violet), var(--pink)); box-shadow:0 6px 18px #0002}
-
-    .panel{display:none; padding:16px; border-top:1px solid var(--stroke)}
-    .panel.active{display:block}
-
-    /* Themed stripes for each panel */
-    .panel .stripe{height:8px; border-radius:8px; margin-bottom:12px}
-    .theme-summary .stripe{background:linear-gradient(90deg, var(--accent), var(--cyan))}
-    .theme-experience .stripe{background:linear-gradient(90deg, var(--violet), var(--pink))}
-    .theme-projects .stripe{background:linear-gradient(90deg, var(--amber), var(--pink))}
-    .theme-education .stripe{background:linear-gradient(90deg, var(--lime), var(--cyan))}
-    .theme-skills .stripe{background:linear-gradient(90deg, var(--accent), var(--amber))}
-    .theme-publications .stripe{background:linear-gradient(90deg, var(--violet), var(--cyan))}
-    .theme-contact .stripe{background:linear-gradient(90deg, var(--pink), var(--lime))}
-
-    /* Cards & grids */
-    .grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}}
-    .item{padding:14px; border:1px dashed var(--stroke); border-radius:14px; background:rgba(10,16,45,.03)}
-    .item h3{margin:0 0 6px; font-size:18px}
-    .when,.where{color:var(--muted); font-size:13px}
-
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{padding:8px 12px; border-radius:999px; border:1px solid var(--chip-stroke); background:var(--chip-bg); font-size:13px}
-    .tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
-    .tag{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--chip-stroke); background:var(--chip-bg)}
-
-    footer{color:var(--muted); text-align:center; padding:30px 0}
-    a{color:var(--accent); text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    /* Light/Dark toggle */
-    .mode{margin-left:auto; display:flex; align-items:center; gap:8px}
-    .switch{position:relative; width:56px; height:30px; background:var(--chip-bg); border:1px solid var(--chip-stroke); border-radius:999px; cursor:pointer}
-    .knob{position:absolute; top:3px; left:3px; width:24px; height:24px; background:#fff; border-radius:50%; box-shadow:0 2px 8px #0003; transition:transform .25s ease}
-    :root.dark .knob{transform:translateX(26px)}
-  </style>
-</head>
-<body>
-  <div class="stars"></div><div class="stars2"></div><div class="stars3"></div>
-  <div class="wrap">
-
-    <!-- Banner (Hero Image #1) -->
-    <div class="banner" role="img" aria-label="Galaxy banner image">
-      <img src="banner.jpg" alt="Galaxy banner" class="banner-img" />
-      <div class="banner-glow"></div>
-      <header class="profile">
-        <div class="avatar" title="Profile photo (Hero Image #2)"></div>
-        <div>
-          <h1>Mahya Hamedi</h1>
-          <p class="subtitle">Digital Product Manager (DTC Genetics) & AI‑in‑Health Researcher</p>
-          <div class="chips">
-            <span class="chip">AI · ML · LLMs · RAG</span>
-            <span class="chip">Digital Health · Precision Medicine</span>
-            <span class="chip">UX · Product Strategy</span>
-          </div>
-        </div>
-        <div class="actions">
-          <a class="btn primary" href="mailto:mahyahamedi98@gmail.com">Email</a>
-          <a class="btn" href="https://www.linkedin.com/in/mahya-hamedi-2477641bb/overlay/about-this-profile/" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn" href="https://github.com/your-username" target="_blank" rel="noopener">GitHub</a>
-          <a class="btn" href="resume.pdf" download>Download CV (PDF)</a>
-          <div class="mode" aria-label="Theme toggle">
-            <span>☀️</span>
-            <div class="switch" id="themeSwitch" role="button" aria-pressed="false" tabindex="0"><div class="knob"></div></div>
-            <span>🌙</span>
-          </div>
-        </div>
-      </header>
-    </div>
-
-    <!-- TABBED CONTENT -->
-    <div class="tabs" id="tabs">
-      <div class="tablist" role="tablist" aria-label="Profile sections">
-        <button class="tab" role="tab" aria-selected="true" aria-controls="panel-summary" id="tab-summary">Summary</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-experience" id="tab-experience">Experience</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-projects" id="tab-projects">Projects</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-education" id="tab-education">Education</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-skills" id="tab-skills">Skills</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-publications" id="tab-publications">Publications</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-contact" id="tab-contact">Contact</button>
-      </div>
-
-      <!-- Summary Panel -->
-      <section class="panel theme-summary active" id="panel-summary" role="tabpanel" aria-labelledby="tab-summary">
-        <div class="stripe"></div>
-        <p>
-          Digital Product Manager at a DTC genetic testing company (LifeandMe), building AI‑powered
-          health products from research to delivery. Experienced in user research, data pipelines, and
-          ML/LLM integration (fine‑tuning & retrieval‑augmented generation) to turn genomic and lifestyle
-          data into actionable recommendations and chat experiences.
-        </p>
-      </section>
-
-      <!-- Experience Panel -->
-      <section class="panel theme-experience" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience">
-        <div class="stripe"></div>
-        <div class="item">
-          <h3>Digital Product Manager — LifeandMe</h3>
-          <div class="when">Sep 2022 – Present · Tehran, IR</div>
-          <ul>
-            <li>User research; managing Android app design providing health reports from genetic & epigenetic analysis.</li>
-            <li>Explored interoperability standards and designed genetics databases & automation flows.</li>
-            <li>Implemented LLM features (fine‑tuning + RAG) for recommendations and a user chatbot.</li>
-            <li>Led a web panel for internal workflows (logistics, finance, CRM).</li>
-            <li>Built WhatsApp automation tool and Telegram bot in Python for marketing/CRM.</li>
-          </ul>
-          <div class="tags"><span class="tag">Product</span><span class="tag">Genomics</span><span class="tag">Python</span><span class="tag">LLMs/RAG</span></div>
-        </div>
-        <div class="item">
-          <h3>Digital Product Manager — YouMate</h3>
-          <div class="when">Apr 2021 – Oct 2022 · Tehran, IR</div>
-          <ul>
-            <li>Designed a health mobile‑app MVP.</li>
-            <li>Co‑developed <em>CoWin</em> personalized PDF guidance for nutrition, exercise, mindful eating, and mental health (COVID‑19 prevention).</li>
-          </ul>
-        </div>
-        <div class="item">
-          <h3>Product Designer — YouMate</h3>
-          <div class="when">Sep 2020 – Mar 2021 · Tehran, IR</div>
-          <ul>
-            <li>Managed & designed a web panel to analyze medical lab tests using OCR.</li>
-            <li>Developed OCR using Python (PaddleOCR, Tesseract); co‑created a medical‑lab dictionary.</li>
-          </ul>
-        </div>
-        <div class="item">
-          <h3>Research Assistant — Multi‑Center (Shiraz & Tehran)</h3>
-          <div class="when">Jan 2022 – Dec 2023</div>
-          <ul>
-            <li>Interviews with patients & providers; data cleaning and EHR entry.</li>
-            <li>Machine Learning and Deep Learning modeling.</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Projects Panel -->
-      <section class="panel theme-projects" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>Personalized Medicine National Document — Contributor</h3>
-            <p>Co‑authored guidance to enhance Personalized Medicine in Iran, inspired by global best practices.</p>
-          </div>
-          <div class="item">
-            <h3>CF Self‑Care App & Specialized EHR — Volunteer</h3>
-            <p>Managed development under the supervision of the Iran CF Foundation.</p>
-          </div>
-          <div class="item">
-            <h3>Digital Health Literacy — Academy of Medical Sciences</h3>
-            <p>Collaborated with the Digital Health Committee to create an infographic document.</p>
-          </div>
-          <div class="item">
-            <h3>Intelligent Leap (Top Team) — YouMate (2023)</h3>
-            <p>Recognized for the OCR‑powered web panel for lab test analytics.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Education Panel -->
-      <section class="panel theme-education" id="panel-education" role="tabpanel" aria-labelledby="tab-education">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>MSc — Medical Informatics</h3>
-            <div class="where">Shahid Beheshti University of Medical Sciences · Full Scholarship</div>
-            <div class="when">Oct 2020 – Dec 2023 · GPA 3.61/4</div>
-            <p><strong>Thesis:</strong> Application of Machine Learning in Breast Cancer Survival Prediction — a Multimethod & Multicenter Comparison.</p>
-          </div>
-          <div class="item">
-            <h3>BSc — Health Information Technology</h3>
-            <div class="where">Shiraz University of Medical Sciences · Full Scholarship</div>
-            <div class="when">Sep 2016 – Aug 2020 · GPA 3.55/4</div>
-            <p><strong>Thesis:</strong> Compliance of selected mental‑health virtual assistants with requirements.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Skills Panel -->
-      <section class="panel theme-skills" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>Core</h3>
-            <div class="tags"><span class="tag">AI</span><span class="tag">Machine Learning</span><span class="tag">LLMs</span><span class="tag">Precision Medicine</span><span class="tag">IoT</span><span class="tag">Gamification</span></div>
-          </div>
-          <div class="item">
-            <h3>Product & Design</h3>
-            <div class="tags"><span class="tag">Product Strategy</span><span class="tag">User Research</span><span class="tag">Figma</span><span class="tag">Benchmarking</span><span class="tag">Adobe Photoshop</span></div>
-          </div>
-          <div class="item">
-            <h3>Technical</h3>
-            <div class="tags"><span class="tag">Python</span><span class="tag">TensorFlow</span><span class="tag">scikit‑learn</span><span class="tag">Streamlit</span><span class="tag">Tesseract/PaddleOCR</span><span class="tag">MySQL</span><span class="tag">HTML/CSS</span><span class="tag">Postman</span><span class="tag">AI Agent Dev</span><span class="tag">RAG</span></div>
-          </div>
-          <div class="item">
-            <h3>Soft & Research</h3>
-            <div class="tags"><span class="tag">Teamwork</span><span class="tag">Presentation</span><span class="tag">Project Management</span><span class="tag">Problem Solving</span><span class="tag">Stress Management</span><span class="tag">Survey Design</span><span class="tag">Data Analysis</span><span class="tag">Interviewing</span><span class="tag">SPSS</span></div>
-          </div>
-          <div class="item">
-            <h3>Languages</h3>
-            <div class="tags"><span class="tag">Persian (Native)</span><span class="tag">English (IELTS 7)</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Publications Panel -->
-      <section class="panel theme-publications" id="panel-publications" role="tabpanel" aria-labelledby="tab-publications">
-        <div class="stripe"></div>
-        <div class="item">
-          <h3>Breast Cancer Survival Prediction (Multimethod)</h3>
-          <div class="when">Scientific Reports (Nature), 2024 — <a href="https://doi.org/10.1038/s41598-024-81734-y" target="_blank" rel="noopener">DOI</a></div>
-        </div>
-        <div class="item">
-          <h3>Deep Learning for 5‑year Survival in Women with Breast Cancer</h3>
-          <div class="when">Accepted, 17th Int’l Conf. on Health Informatics, 2024</div>
-        </div>
-        <div class="item">
-          <h3>Usability Evaluation of EMR of Rapid Response Team</h3>
-          <div class="when">Applied Health Information Technology Journal, 2021 — <a href="http://dx.doi.org/10.18502/ahit.v2i2.7991" target="_blank" rel="noopener">DOI</a></div>
-        </div>
-        <div class="item">
-          <h3>Healthcare Dashboards: Umbrella Review</h3>
-          <div class="when">Digital Health Journal, under review, 2025</div>
-        </div>
-        <div class="item">
-          <h3>Gamification in Personalized Health App</h3>
-          <div class="when">In progress, 2025</div>
-        </div>
-      </section>
-
-      <!-- Contact Panel -->
-      <section class="panel theme-contact" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>Contact</h3>
-            <p><strong>Email:</strong> <a href="mailto:mahyahamedi98@gmail.com">mahyahamedi98@gmail.com</a></p>
-            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/mahya-hamedi-2477641bb/overlay/about-this-profile/" target="_blank" rel="noopener">Mahya Hamedi</a></p>
-            <p><strong>GitHub:</strong> <a href="https://github.com/your-username" target="_blank" rel="noopener">your-username</a></p>
-          </div>
-          <div class="item">
-            <h3>Download</h3>
-            <p><a class="btn primary" href="resume.pdf" download>Download my CV (PDF)</a></p>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <footer>
-      Built with ❤️ on GitHub Pages · Last updated <span id="today"></span>
-    </footer>
-  </div>
-
-  <script>
-    // --- Tabs logic with ARIA ---
-    const tabs = document.querySelectorAll('.tab');
-    const panels = document.querySelectorAll('.panel');
-    function activateTab(id){
-      tabs.forEach(t=>{const sel = t.id === 'tab-'+id; t.setAttribute('aria-selected', sel);});
-      panels.forEach(p=>{p.classList.toggle('active', p.id === 'panel-'+id)});
-      // persist
-      try{localStorage.setItem('activeTab', id)}catch(e){}
-    }
-    tabs.forEach(t=>{
-      t.addEventListener('click', ()=>activateTab(t.id.replace('tab-','')));
-      t.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); activateTab(t.id.replace('tab-','')); }});
-    });
-    // restore last tab
-    (function(){
-      const last = (localStorage.getItem('activeTab')||'summary');
-      if(last!=='summary') activateTab(last);
-    })();
-
-    // --- Theme toggle (light/dark) with prefers-color-scheme ---
-    const root = document.documentElement;
-    const switchEl = document.getElementById('themeSwitch');
-    function applyTheme(mode){
-      if(mode==='dark'){root.classList.add('dark'); switchEl.setAttribute('aria-pressed','true');}
-      else{root.classList.remove('dark'); switchEl.setAttribute('aria-pressed','false');}
-    }
-    (function(){
-      const saved = localStorage.getItem('colorMode');
-      if(saved){ applyTheme(saved); }
-      else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){ applyTheme('dark'); }
-    })();
-    function toggleTheme(){ const dark = root.classList.toggle('dark'); applyTheme(dark?'dark':'light'); try{localStorage.setItem('colorMode', dark?'dark':'light')}catch(e){} }
-    switchEl.addEventListener('click', toggleTheme);
-    switchEl.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleTheme(); }});
-
-    // footer date
-    (function(){
-      const d=new Date();
-      document.getElementById('today').textContent = d.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'2-digit'});
+      // --- Lightweight Self Tests (non-intrusive) ---
+      // These tests validate key behaviors without altering the final state.
+      (function runSelfTests(){
+        try{
+          const results = [];
+          // T1: tabs exist and panels exist
+          results.push(['T1_tabs_present', tabs.length>0 && panels.length>0]);
+          // T2: activate a tab programmatically and revert
+          const activeBefore = (localStorage.getItem('activeTab')||'summary');
+          activateTab('experience');
+          const t2 = document.getElementById('panel-experience').classList.contains('active');
+          results.push(['T2_activate_experience', t2]);
+          activateTab(activeBefore);
+          // T3: theme toggle flips class
+          const wasDark = document.documentElement.classList.contains('dark');
+          toggleTheme();
+          const t3 = document.documentElement.classList.contains('dark') !== wasDark;
+          results.push(['T3_theme_toggle', t3]);
+          // revert theme
+          toggleTheme();
+          // Log concise report
+          const allPass = results.every(([_, ok])=>ok);
+          console.log('[Self‑Test]', Object.fromEntries(results), 'ALL_PASS=', allPass);
+        }catch(err){ console.warn('[Self‑Test] skipped:', err); }
+      })();
     })();
   </script>
 </body>
