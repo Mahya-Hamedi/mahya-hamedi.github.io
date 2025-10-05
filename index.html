@@ -746,8 +746,21 @@
       gap: 24px;
     }
 
+    /* Style for the 2-column project grid - better readability */
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
     @media (max-width: 640px) {
       .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .projects-grid {
+        /* On tablets and below, stack in a single column */
         grid-template-columns: 1fr;
       }
     }
@@ -1094,12 +1107,13 @@
           
           <div class="profile-info">
             <h1 class="profile-name">Mahya Hamedi</h1>
-            <p class="profile-title">Digital Product Manager (DTC Genetics) & AI‑in‑Health Researcher</p>
+            <p class="profile-title">Seyedeh Zahra Hamedi</p>
+            <p class="profile-title">Digital Product Manager & AI‑in‑Health Researcher</p>
             
             <div class="profile-highlights">
               <span class="highlight-badge">AI · ML · LLMs · RAG</span>
               <span class="highlight-badge">Digital Health · Precision Medicine</span>
-              <span class="highlight-badge">UX · Product Strategy</span>
+              <span class="highlight-badge">Digital Product Delevopment</span>
             </div>
           </div>
 
@@ -1126,11 +1140,14 @@
         <!-- Tab Navigation -->
         <nav class="tabs-nav" role="tablist" aria-label="Resume sections">
           <button class="tab-button" role="tab" aria-selected="true" aria-controls="panel-summary" id="tab-summary">Summary</button>
-          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-experience" id="tab-experience">Experience</button>
-          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-projects" id="tab-projects">Projects</button>
-          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-education" id="tab-education">Education</button>
           <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-skills" id="tab-skills">Skills</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-experience" id="tab-experience">Experience and Projects</button>
+          
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-education" id="tab-education">Education</button>
+          
           <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-publications" id="tab-publications">Publications</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-courses" id="tab-courses">Courses</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-awards" id="tab-awards">Awards</button>
           <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-contact" id="tab-contact">Contact</button>
         </nav>
 
@@ -1142,10 +1159,7 @@
           </div>
           <div class="summary-content">
             <p>
-              Digital Product Manager at a DTC genetic testing company (LifeandMe), building AI‑powered
-              health products from research to delivery. Experienced in user research, data pipelines, and
-              ML/LLM integration (fine‑tuning & retrieval‑augmented generation) to turn genomic and lifestyle
-              data into actionable recommendations and chat experiences.
+                A Medical Informatics researcher and Digital Product Manager bridging the gap between scientific discovery and user-centered health technology. I specialize in building AI-powered products, platforms, and mobile apps that translate complex genomic and clinical data into actionable, personalized insights. With a background in developing machine learning models for cancer survival prediction and hands-on experience deploying LLMs and RAG systems in a commercial setting, I thrive on turning evidence-based research into intuitive applications that empower users and improve health outcomes.
             </p>
           </div>
         </div>
@@ -1247,12 +1261,52 @@
               </div>
             </article>
           </div>
+          
+          <!-- Projects Section within Experience Tab -->
+          <div class="panel-header" style="margin-top: 60px; padding-top: 40px; border-top: 2px solid var(--border-subtle);">
+            <h2 class="panel-title">Other Notable Projects</h2>
+            <div class="panel-accent"></div>
+          </div>
+            
+          <div class="card-grid projects-grid">
+            <article class="card">
+              <div class="card-icon">📋</div>
+              <h3 class="card-title">Personalized Medicine National Document</h3>
+              <p class="card-description">
+                Member of a multidisciplinary group of writers. The goal of this document was to provide guidance for enhancing Personalized Medicine in Iran by drawing inspiration from successful cases around the world.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🏥</div>
+              <h3 class="card-title">CF Self‑Care App & Specialized EHR</h3>
+              <p class="card-description">
+                Managing the development of a self-care application for cystic fibrosis patients and a specialized EHR system for CF healthcare centers in Iran, under the supervision of the Iran CF Foundation.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">📊</div>
+              <h3 class="card-title">Digital Health Literacy Initiative</h3>
+              <p class="card-description">
+                Participated with the Digital Health Committee at the Academy of Medical Sciences in creating an infographic document on elevating digital health literacy.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🖥️</div>
+              <h3 class="card-title">Psychology-Based HR Platform</h3>
+              <p class="card-description">
+                Managing the design and development of a human resource management platform based on psychological tests that were used by a psychiatric resident in his thesis.
+              </p>
+            </article>
+          </div>
         </div>
 
         <!-- Projects Panel -->
         <div class="tab-panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
           <div class="panel-header">
-            <h2 class="panel-title">Notable Projects</h2>
+            <h2 class="panel-title">Other Notable Projects</h2>
             <div class="panel-accent"></div>
           </div>
 
@@ -1422,7 +1476,7 @@
           </div>
 
           <article class="publication-item">
-            <h3 class="publication-title">Breast Cancer Survival Prediction (Multimethod)</h3>
+            <h3 class="publication-title">Application of machine learning in breast cancer survival prediction using a multimethod approach</h3>
             <p class="publication-meta">Scientific Reports (Nature), 2024</p>
             <a href="https://doi.org/10.1038/s41598-024-81734-y" target="_blank" rel="noopener" class="publication-link">
               View Publication
@@ -1430,12 +1484,14 @@
           </article>
 
           <article class="publication-item">
-            <h3 class="publication-title">Deep Learning for 5‑year Survival in Women with Breast Cancer</h3>
+            <h3 class="publication-title">Providing an Efficient
+                Model Based on Deep Learning to Predict 5-year Survival in Women with Breast Cancer</h3>
             <p class="publication-meta">Accepted, 17th International Conference on Health Informatics, 2024</p>
           </article>
 
           <article class="publication-item">
-            <h3 class="publication-title">Usability Evaluation of EMR of Rapid Response Team</h3>
+            <h3 class="publication-title">Usability Evaluation of the
+                Electronic Medical Record of the Rapid Response Team: a Case Study.</h3>
             <p class="publication-meta">Applied Health Information Technology Journal, 2021</p>
             <a href="http://dx.doi.org/10.18502/ahit.v2i2.7991" target="_blank" rel="noopener" class="publication-link">
               View Publication
@@ -1443,15 +1499,110 @@
           </article>
 
           <article class="publication-item">
-            <h3 class="publication-title">Healthcare Dashboards: Umbrella Review</h3>
+            <h3 class="publication-title">Healthcare Dashboards: An Umbrella Review of Applications,
+                Benefits, Design and Challenges</h3>
             <p class="publication-meta">Digital Health Journal, under review, 2025</p>
           </article>
 
           <article class="publication-item">
-            <h3 class="publication-title">Gamification in Personalized Health App</h3>
+            <h3 class="publication-title">Design and Evaluation of Gamification Approaches in a Personalized Health Mobile
+                Application for Lifestyle Optimization</h3>
             <p class="publication-meta">In progress, 2025</p>
           </article>
         </div>
+
+        <div class="tab-panel" id="panel-courses" role="tabpanel" aria-labelledby="tab-courses">
+            <div class="panel-header">
+              <h2 class="panel-title">Selected Courses & Certifications</h2>
+              <div class="panel-accent"></div>
+            </div>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">📃​ Introduction to Retrieval Augmented Generation (RAG)</h3>
+              <p class="publication-meta">Coursera Instructor Network, 2025</p>
+            </article>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">🔍​ User Research of Digital Products</h3>
+              <p class="publication-meta">Userx Academy, 2024</p>
+            </article>
+          
+            <article class="publication-item">
+                <h3 class="publication-title">👩‍💻​ Machine Learning Foundations for Product Managers</h3>
+                <p class="publication-meta">Duke University, 2024</p>
+                <a href="https://www.coursera.org/account/accomplishments/verify/YXEUURZ2CLDL?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noopener" class="publication-link">
+                  View Certificate
+                </a>
+              </article>
+            
+            <article class="publication-item">
+              <h3 class="publication-title">📱 Digital Product Management: Modern Fundamentals</h3>
+              <p class="publication-meta">University of Virginia, 2023</p>
+              <a href="https://www.coursera.org/account/accomplishments/verify/JF4755BNCM9K?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noopener" class="publication-link">
+                View Certificate
+              </a>
+            </article>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">📊​ Data Science in Stratified Healthcare and Precision Medicine</h3>
+              <p class="publication-meta">The University of Edinburgh, 2023</p>
+              <a href="https://www.coursera.org/account/accomplishments/verify/JWXNDB4TWK79?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=pdf_header_button&utm_product=course" target="_blank" rel="noopener" class="publication-link">
+                View Certificate
+              </a>
+            </article>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">🐍​ Advanced programming using Python</h3>
+              <p class="publication-meta">Maktabkhone, 2020</p>
+              <a href="https://maktabkhooneh.org/certificates/mk-2oihtg/?lang=fa" target="_blank" rel="noopener" class="publication-link">
+                View Certificate
+              </a>
+            </article>
+
+            <article class="publication-item">
+                <h3 class="publication-title">🐍​ Introduction to programming using Python</h3>
+                <p class="publication-meta">Maktabkhone, 2020</p>
+                <a href="https://maktabkhooneh.org/certificates/mk-2zf4hv/?lang=fa" target="_blank" rel="noopener" class="publication-link">
+                  View Certificate
+                </a>
+              </article>
+            
+            <article class="publication-item">
+              <h3 class="publication-title">🧬 Bioinformatics Summer School</h3>
+              <p class="publication-meta">Shiraz University of Medical Sciences, 2019</p>
+              <a href="" target="_blank" rel="noopener" class="publication-link">
+                View Certificate
+              </a>
+            </article>
+          </div>
+
+
+          <div class="tab-panel" id="panel-awards" role="tabpanel" aria-labelledby="tab-awards">
+            <div class="panel-header">
+              <h2 class="panel-title">Selected Honors & Awards</h2>
+              <div class="panel-accent"></div>
+            </div>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">🏆 Top Team, Iran's Intelligent Leap in Digital Economy Plan</h3>
+              <p class="publication-meta">YouMate, 2023 - Recognized for a web-based panel designed to analyze medical lab tests using OCR.</p>
+            </article>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">🏆 3rd Rank, Nationwide Universities Entrance Exam for Master of Medical Informatics</h3>
+              <p class="publication-meta">2020</p>
+            </article>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">🏆 5th Rank, Nationwide Universities Entrance Exam for Master of Health IT</h3>
+              <p class="publication-meta">2020</p>
+            </article>
+          
+            <article class="publication-item">
+              <h3 class="publication-title">🏆 Top 2%, Nationwide Universities Entrance Exam</h3>
+              <p class="publication-meta">2016 - Out of ~500,000 applicants.</p>
+            </article>
+          </div>
 
         <!-- Contact Panel -->
         <div class="tab-panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">
