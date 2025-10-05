@@ -7,403 +7,1666 @@
   <meta name="description" content="Digital Product Manager & AI‑in‑Health Researcher" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root{
-      /* Light mode tokens */
-      --bg1:#f6f8ff; --bg2:#ffffff; --text:#0f1230; --muted:#55607a; --stroke:#e1e6fb; --glass:rgba(10,16,45,.05);
-      --card:#ffffff; --accent:#3b82f6; --violet:#7c3aed; --pink:#ec4899; --cyan:#06b6d4; --lime:#65b336; --amber:#f59e0b;
-      --chip-bg:#eef2ff; --chip-stroke:#e2e7ff;
+    /* ===================================
+       CSS VARIABLES & THEMING
+       =================================== */
+    :root {
+      /* Light mode palette */
+      --bg-primary: #f8f9fd;
+      --bg-secondary: #ffffff;
+      --bg-elevated: #ffffff;
+      --text-primary: #0a0e27;
+      --text-secondary: #4a5578;
+      --text-tertiary: #6b7599;
+      --border-subtle: #e2e7f4;
+      --border-medium: #d1d8e8;
+      --shadow-sm: 0 2px 8px rgba(10, 14, 39, 0.04);
+      --shadow-md: 0 4px 16px rgba(10, 14, 39, 0.08);
+      --shadow-lg: 0 12px 40px rgba(10, 14, 39, 0.12);
+      --shadow-xl: 0 20px 60px rgba(10, 14, 39, 0.16);
+      
+      /* Brand colors */
+      --accent-blue: #3b82f6;
+      --accent-violet: #7c3aed;
+      --accent-pink: #ec4899;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      
+      /* Gradient overlays */
+      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      
+      /* Glassmorphism */
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --backdrop-blur: blur(12px);
     }
-    :root.dark{
-      /* Dark mode tokens */
-      --bg1:#050516; --bg2:#0a0a2a; --text:#eaf0ff; --muted:#a9b3d1; --stroke:rgba(255,255,255,.12); --glass:rgba(255,255,255,.06);
-      --card:#0f1338; --accent:#8ab4ff; --violet:#b388ff; --pink:#ff7ad9; --cyan:#7efaff; --lime:#c8ff7a; --amber:#ffd27a;
-      --chip-bg:rgba(138,180,255,.12); --chip-stroke:rgba(255,255,255,.16);
+
+    :root.dark {
+      /* Dark mode palette */
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #0f1524;
+      --bg-elevated: #1a1f35;
+      --text-primary: #e8edf5;
+      --text-secondary: #a8b2cc;
+      --text-tertiary: #7a8aad;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-medium: rgba(255, 255, 255, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+      --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.6);
+      
+      /* Adjusted brand colors for dark mode */
+      --accent-blue: #60a5fa;
+      --accent-violet: #a78bfa;
+      --accent-pink: #f472b6;
+      --accent-cyan: #22d3ee;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      
+      /* Glass for dark mode */
+      --glass-bg: rgba(26, 31, 53, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
-      background:
-        radial-gradient(1200px 800px at 80% -10%, #7c3aed11 0%, transparent 60%),
-        radial-gradient(900px 700px at 10% 0%, #06b6d411 0%, transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));}
+    /* ===================================
+       RESET & BASE STYLES
+       =================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
-    /* Galaxy starfields */
-    .stars,.stars2,.stars3{position:fixed; inset:0; pointer-events:none; z-index:-1; background-repeat:repeat; background-position:0 0}
-    .stars{background-image:radial-gradient(2px 2px at 20px 30px,#fff8 60%,transparent 61%),radial-gradient(1px 1px at 100px 200px,#fff5 60%,transparent 61%),radial-gradient(1px 1px at 300px 400px,#fff5 60%,transparent 61%); animation:drift 120s linear infinite; opacity:.45}
-    .stars2{background-image:radial-gradient(2px 2px at 50px 80px,#c0f7ff88 60%,transparent 61%),radial-gradient(1.5px 1.5px at 250px 120px,#ffc0ff77 60%,transparent 61%); animation:drift 180s linear infinite reverse; opacity:.35}
-    .stars3{background-image:radial-gradient(1.5px 1.5px at 150px 60px,#b3ff7a66 60%,transparent 61%),radial-gradient(1px 1px at 400px 300px,#7efaff66 60%,transparent 61%); animation:drift 240s linear infinite; opacity:.25}
-    @keyframes drift{from{background-position:0 0} to{background-position:-2000px 2000px}}
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-    .wrap{max-width:1180px; margin:0 auto; padding:18px}
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
 
-    /* Banner */
-    .banner{position:relative; border-radius:22px; overflow:hidden; border:1px solid var(--stroke); background:linear-gradient(180deg, #131845, #0a0f2d);}    
-    .banner-img{width:100%; height:min(45vw,450px); object-fit:cover; display:block; filter:saturate(1.2) contrast(1.05); background:#0a0f2d}
-    .banner-glow{position:absolute; inset:0; background: radial-gradient(700px 200px at 20% 0%, var(--cyan)11, transparent 70%), radial-gradient(700px 200px at 80% 0%, var(--pink)11, transparent 70%);}    
+    /* ===================================
+       ANIMATED BACKGROUND
+       =================================== */
+    .background-animation {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.4;
+      pointer-events: none;
+    }
 
-    header.profile{display:grid; grid-template-columns:110px 1fr auto; gap:18px; align-items:end; padding:16px 0 0; margin-top: -60px;}
-    @media (max-width:720px){header.profile{grid-template-columns:80px 1fr; grid-template-areas:"av name" "act act"; gap:12px}}
-    .avatar{grid-area:av; width:110px; height:110px; border-radius:22px; border:2px solid var(--stroke); background:#111 url('avatar.jpg') center/cover no-repeat; box-shadow:0 10px 30px #0003}
-    h1{margin:0; font-size:clamp(24px,3.2vw,38px); letter-spacing:.2px}
-    .subtitle{margin:6px 0 0; color:var(--muted)}
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: float 20s ease-in-out infinite;
+    }
 
-    .actions{grid-area:act; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .btn{padding:10px 14px; border-radius:999px; border:1px solid var(--stroke); background:var(--glass); color:var(--text); text-decoration:none; font-weight:600}
-    .btn.primary{background:linear-gradient(90deg, var(--accent), var(--violet)); color:#0b0f2a}
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #667eea, transparent 70%);
+      top: -200px;
+      left: -100px;
+      animation-delay: 0s;
+    }
 
-    /* Tabs */
-    .tabs{margin-top:16px; border-radius:18px; border:1px solid var(--stroke); overflow:hidden; background:var(--card)}
-    .tablist{display:flex; flex-wrap:wrap; gap:8px; padding:10px; background:linear-gradient(180deg, var(--card), rgba(255,255,255,.02)); position:sticky; top:0; z-index:5}
-    .tab{appearance:none; border:1px solid var(--chip-stroke); background:var(--chip-bg); color:var(--text); padding:10px 14px; border-radius:999px; font-weight:600; cursor:pointer}
-    .tab[aria-selected="true"]{border-color:transparent; color:#0b0f2a; background:linear-gradient(90deg, var(--accent), var(--violet), var(--pink)); box-shadow:0 6px 18px #0002}
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, #06b6d4, transparent 70%);
+      top: 30%;
+      right: -150px;
+      animation-delay: 5s;
+    }
 
-    .panel{display:none; padding:16px; border-top:1px solid var(--stroke)}
-    .panel.active{display:block}
+    .orb-3 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, #ec4899, transparent 70%);
+      bottom: -100px;
+      left: 20%;
+      animation-delay: 10s;
+    }
 
-    /* Themed stripes for each panel */
-    .panel .stripe{height:8px; border-radius:8px; margin-bottom:12px}
-    .theme-summary .stripe{background:linear-gradient(90deg, var(--accent), var(--cyan))}
-    .theme-experience .stripe{background:linear-gradient(90deg, var(--violet), var(--pink))}
-    .theme-projects .stripe{background:linear-gradient(90deg, var(--amber), var(--pink))}
-    .theme-education .stripe{background:linear-gradient(90deg, var(--lime), var(--cyan))}
-    .theme-skills .stripe{background:linear-gradient(90deg, var(--accent), var(--amber))}
-    .theme-publications .stripe{background:linear-gradient(90deg, var(--violet), var(--cyan))}
-    .theme-contact .stripe{background:linear-gradient(90deg, var(--pink), var(--lime))}
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(50px, -50px) scale(1.1); }
+      66% { transform: translate(-30px, 30px) scale(0.9); }
+    }
 
-    /* Cards & grids */
-    .grid{display:grid; grid-template-columns:1fr 1fr; gap:16px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}}
-    .item{padding:14px; border:1px dashed var(--stroke); border-radius:14px; background:rgba(10,16,45,.03)}
-    .item h3{margin:0 0 6px; font-size:18px}
-    .when,.where{color:var(--muted); font-size:13px}
+    /* Subtle particle effect */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: 0.15;
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, var(--accent-blue), transparent),
+        radial-gradient(2px 2px at 60% 70%, var(--accent-violet), transparent),
+        radial-gradient(1px 1px at 80% 10%, var(--accent-cyan), transparent),
+        radial-gradient(1px 1px at 40% 80%, var(--accent-pink), transparent);
+      background-size: 200% 200%;
+      background-position: 0% 0%;
+      animation: particle-drift 60s linear infinite;
+    }
 
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{padding:8px 12px; border-radius:999px; border:1px solid var(--chip-stroke); background:var(--chip-bg); font-size:13px}
-    .tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
-    .tag{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--chip-stroke); background:var(--chip-bg)}
+    @keyframes particle-drift {
+      to { background-position: 100% 100%; }
+    }
 
-    footer{color:var(--muted); text-align:center; padding:30px 0}
-    a{color:var(--accent); text-decoration:none}
-    a:hover{text-decoration:underline}
+    /* ===================================
+       CONTAINER & LAYOUT
+       =================================== */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-    /* Light/Dark toggle */
-    .mode{margin-left:auto; display:flex; align-items:center; gap:8px}
-    .switch{position:relative; width:56px; height:30px; background:var(--chip-bg); border:1px solid var(--chip-stroke); border-radius:999px; cursor:pointer}
-    .knob{position:absolute; top:3px; left:3px; width:24px; height:24px; background:#fff; border-radius:50%; box-shadow:0 2px 8px #0003; transition:transform .25s ease}
-    :root.dark .knob{transform:translateX(26px)}
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 16px;
+      }
+    }
+
+    /* ===================================
+       HERO SECTION
+       =================================== */
+    .hero-section {
+      position: relative;
+      padding-top: 40px;
+      padding-bottom: 60px;
+      overflow: hidden;
+    }
+
+    .hero-banner {
+      position: relative;
+      height: 380px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+      margin-bottom: -100px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .hero-banner-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.85) saturate(1.1);
+    }
+
+    .hero-banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(103, 126, 234, 0.1) 0%,
+        rgba(118, 75, 162, 0.15) 50%,
+        rgba(10, 14, 26, 0.6) 100%
+      );
+    }
+
+    /* Profile Card */
+    .profile-card {
+      position: relative;
+      z-index: 10;
+      background: var(--glass-bg);
+      backdrop-filter: var(--backdrop-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 120px 40px 40px;
+      box-shadow: var(--shadow-lg);
+      margin-top: 100px;
+    }
+
+    .profile-header {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .profile-avatar {
+      position: absolute;
+      top: -70px;
+      left: 40px;
+      width: 140px;
+      height: 140px;
+      border-radius: 24px;
+      border: 4px solid var(--bg-elevated);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      padding-top: 0;
+    }
+
+    .profile-name {
+      margin: 0 0 8px 0;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .profile-title {
+      margin: 0 0 20px 0;
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .profile-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .highlight-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 18px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .highlight-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-blue);
+    }
+
+    .highlight-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      margin-right: 10px;
+      display: inline-block;
+    }
+
+    .highlight-badge:nth-child(2)::before { background: var(--accent-emerald); }
+    .highlight-badge:nth-child(3)::before { background: var(--accent-violet); }
+
+    /* Action Buttons */
+    .profile-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 200px;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-medium);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .action-btn-primary {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      color: white;
+      border: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    .action-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .action-btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .action-btn-secondary:hover {
+      background: var(--bg-primary);
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle-wrapper:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      background: var(--border-medium);
+      border-radius: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    :root.dark .theme-toggle {
+      background: var(--accent-blue);
+    }
+
+    :root.dark .theme-toggle-knob {
+      transform: translateX(24px);
+    }
+
+    /* Responsive Profile Card */
+    @media (max-width: 1024px) {
+      .profile-header {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .profile-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: auto;
+      }
+
+      .profile-avatar {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .profile-info {
+        text-align: center;
+        margin-top: 60px;
+      }
+
+      .profile-highlights {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-banner {
+        height: 250px;
+        margin-bottom: -80px;
+      }
+
+      .profile-card {
+        padding: 100px 24px 32px;
+        margin-top: 80px;
+      }
+
+      .profile-avatar {
+        width: 100px;
+        height: 100px;
+        top: -50px;
+      }
+
+      .profile-actions {
+        flex-direction: column;
+      }
+
+      .action-btn {
+        width: 100%;
+      }
+    }
+
+    /* ===================================
+       NAVIGATION TABS
+       =================================== */
+    .tabs-section {
+      margin: 40px 0 60px;
+    }
+
+    .tabs-container {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .tabs-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: var(--backdrop-blur);
+    }
+
+    .tab-button {
+      flex: 1 1 auto;
+      min-width: max-content;
+      padding: 12px 20px;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .tab-button:hover {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-color: var(--accent-blue);
+    }
+
+    .tab-button[aria-selected="true"] {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      color: white;
+      border-color: transparent;
+      box-shadow: var(--shadow-md);
+    }
+
+    .tab-button[aria-selected="true"]::after {
+      content: '';
+      position: absolute;
+      bottom: -17px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid var(--accent-violet);
+    }
+
+    /* Tab Panels */
+    .tab-panel {
+      display: none;
+      padding: 40px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel-header {
+      margin-bottom: 32px;
+    }
+
+    .panel-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0 0 12px 0;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-accent {
+      height: 4px;
+      width: 80px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-violet));
+    }
+
+    /* Summary specific */
+    .summary-content {
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 900px;
+    }
+
+    /* ===================================
+       TIMELINE COMPONENTS (Experience & Education)
+       =================================== */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent-blue), var(--accent-violet), var(--accent-pink));
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 24px;
+      margin-bottom: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover {
+      transform: translateX(8px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--accent-blue);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -50px;
+      top: 32px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      border: 3px solid var(--bg-elevated);
+      box-shadow: 0 0 0 4px var(--accent-blue);
+      z-index: 1;
+    }
+
+    .timeline-item:nth-child(even)::before {
+      background: var(--accent-violet);
+      box-shadow: 0 0 0 4px var(--accent-violet);
+    }
+
+    .timeline-item:nth-child(3n)::before {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 0 4px var(--accent-cyan);
+    }
+
+    .timeline-header {
+      margin-bottom: 16px;
+    }
+
+    .timeline-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      color: var(--text-primary);
+    }
+
+    .timeline-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .timeline-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .timeline-meta-item::before {
+      content: '•';
+      color: var(--accent-blue);
+      font-weight: bold;
+    }
+
+    .timeline-meta-item:first-child::before {
+      content: '📅';
+    }
+
+    .timeline-meta-item:last-child::before {
+      content: '📍';
+    }
+
+    .timeline-description {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+
+    .timeline-content ul {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .timeline-content li {
+      margin: 8px 0;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .timeline-content li::marker {
+      color: var(--accent-blue);
+    }
+
+    .timeline-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      padding: 6px 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    .tag:hover {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    /* ===================================
+       CARD GRID (Projects, Skills)
+       =================================== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    @media (max-width: 640px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      padding: 28px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-violet));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent-blue);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      color: var(--text-primary);
+    }
+
+    .card-description {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-tag {
+      padding: 8px 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    .skill-tag:hover {
+      background: var(--accent-emerald);
+      color: white;
+      border-color: var(--accent-emerald);
+      transform: scale(1.05);
+    }
+
+    /* ===================================
+       PUBLICATIONS
+       =================================== */
+    .publication-item {
+      padding: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .publication-item:hover {
+      box-shadow: var(--shadow-md);
+      border-left-color: var(--accent-violet);
+      transform: translateX(4px);
+    }
+
+    .publication-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+      color: var(--text-primary);
+    }
+
+    .publication-meta {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+
+    .publication-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .publication-link:hover {
+      color: var(--accent-violet);
+      gap: 10px;
+    }
+
+    .publication-link::after {
+      content: '→';
+    }
+
+    /* ===================================
+       CONTACT
+       =================================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .contact-card {
+      padding: 32px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .contact-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    .contact-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .contact-value {
+      font-size: 16px;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      word-break: break-word;
+    }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .contact-link:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ===================================
+       FOOTER
+       =================================== */
+    .footer {
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-tertiary);
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 60px;
+    }
+
+    .footer-text {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* ===================================
+       UTILITY CLASSES
+       =================================== */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .mb-0 { margin-bottom: 0; }
+    .mb-1 { margin-bottom: 8px; }
+    .mb-2 { margin-bottom: 16px; }
+    .mb-3 { margin-bottom: 24px; }
+    .mb-4 { margin-bottom: 32px; }
+
+    .mt-0 { margin-top: 0; }
+    .mt-1 { margin-top: 8px; }
+    .mt-2 { margin-top: 16px; }
+    .mt-3 { margin-top: 24px; }
+    .mt-4 { margin-top: 32px; }
+
+    /* ===================================
+       RESPONSIVE ADJUSTMENTS
+       =================================== */
+    @media (max-width: 768px) {
+      .tab-panel {
+        padding: 24px 20px;
+      }
+
+      .timeline {
+        padding-left: 24px;
+      }
+
+      .timeline-item::before {
+        left: -34px;
+      }
+
+      .panel-title {
+        font-size: 24px;
+      }
+
+      .tabs-nav {
+        padding: 12px;
+        gap: 6px;
+      }
+
+      .tab-button {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+    }
+
+    /* ===================================
+       ACCESSIBILITY
+       =================================== */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 2px;
+    }
+
+    /* ===================================
+       PRINT STYLES
+       =================================== */
+    @media print {
+      .background-animation,
+      .particles,
+      .theme-toggle-wrapper,
+      .tabs-nav {
+        display: none !important;
+      }
+
+      .tab-panel {
+        display: block !important;
+        page-break-inside: avoid;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+    }
   </style>
 </head>
 <body>
-  <noscript>This site requires JavaScript to run the tabs and theme toggle.</noscript>
-  <div class="stars"></div><div class="stars2"></div><div class="stars3"></div>
-  <div class="wrap">    <!-- Banner (Hero Image #1) -->
-    <div class="banner" role="img" aria-label="Galaxy banner image">
-      <img src="banner.jpg" alt="Galaxy banner" class="banner-img" />
-      <div class="banner-glow"></div>
-    </div>
+  <!-- Animated Background -->
+  <div class="background-animation">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+  <div class="particles"></div>
 
-    <!-- Profile header (moved outside banner to avoid overlap glitches) -->
-    <header class="profile">
-      <div class="avatar" title="Profile photo (Hero Image #2)"></div>
-      <div>
-        <h1>Mahya Hamedi</h1>
-        <p class="subtitle">Digital Product Manager (DTC Genetics) & AI‑in‑Health Researcher</p>
-        <div class="chips">
-          <span class="chip">AI · ML · LLMs · RAG</span>
-          <span class="chip">Digital Health · Precision Medicine</span>
-          <span class="chip">UX · Product Strategy</span>
-        </div>
-      </div>
-      <div class="actions">
-        <a class="btn primary" href="mailto:mahyahamedi98@gmail.com">Email</a>
-        <a class="btn" href="https://www.linkedin.com/in/mahya-hamedi-2477641bb/overlay/about-this-profile/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn" href="resume.pdf" download>Download CV (PDF)</a>
-        <div class="mode" aria-label="Theme toggle">
-          <span>☀️</span>
-          <div class="switch" id="themeSwitch" role="button" aria-pressed="false" tabindex="0"><div class="knob"></div></div>
-          <span>🌙</span>
-        </div>
-      </div>
-    </header>
-
-    <!-- TABBED CONTENT -->
-    <div class="tabs" id="tabs">
-      <div class="tablist" role="tablist" aria-label="Profile sections">
-        <button class="tab" role="tab" aria-selected="true" aria-controls="panel-summary" id="tab-summary">Summary</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-experience" id="tab-experience">Experience</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-projects" id="tab-projects">Projects</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-education" id="tab-education">Education</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-skills" id="tab-skills">Skills</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-publications" id="tab-publications">Publications</button>
-        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-contact" id="tab-contact">Contact</button>
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <!-- Banner -->
+      <div class="hero-banner">
+        <img src="banner.jpg" alt="Professional banner showcasing AI and digital health innovation" class="hero-banner-image" />
+        <div class="hero-banner-overlay"></div>
       </div>
 
-      <!-- Summary Panel -->
-      <section class="panel theme-summary active" id="panel-summary" role="tabpanel" aria-labelledby="tab-summary">
-        <div class="stripe"></div>
-        <p>
-          Digital Product Manager at a DTC genetic testing company (LifeandMe), building AI‑powered
-          health products from research to delivery. Experienced in user research, data pipelines, and
-          ML/LLM integration (fine‑tuning & retrieval‑augmented generation) to turn genomic and lifestyle
-          data into actionable recommendations and chat experiences.
-        </p>
-      </section>
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <img src="avatar.jpg" alt="Mahya Hamedi - Professional headshot" />
+        </div>
 
-      <!-- Experience Panel -->
-      <section class="panel theme-experience" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience">
-        <div class="stripe"></div>
-        <div class="item">
-          <h3>Digital Product Manager — LifeandMe</h3>
-          <div class="when">Sep 2022 – Present · Tehran, IR</div>
-          <ul>
-            <li>User research; managing Android app design providing health reports from genetic & epigenetic analysis.</li>
-            <li>Explored interoperability standards and designed genetics databases & automation flows.</li>
-            <li>Implemented LLM features (fine‑tuning + RAG) for recommendations and a user chatbot.</li>
-            <li>Led a web panel for internal workflows (logistics, finance, CRM).</li>
-            <li>Built WhatsApp automation tool and Telegram bot in Python for marketing/CRM.</li>
-          </ul>
-          <div class="tags"><span class="tag">Product</span><span class="tag">Genomics</span><span class="tag">Python</span><span class="tag">LLMs/RAG</span></div>
-        </div>
-        <div class="item">
-          <h3>Digital Product Manager — YouMate</h3>
-          <div class="when">Apr 2021 – Oct 2022 · Tehran, IR</div>
-          <ul>
-            <li>Designed a health mobile‑app MVP.</li>
-            <li>Co‑developed <em>CoWin</em> personalized PDF guidance for nutrition, exercise, mindful eating, and mental health (COVID‑19 prevention).</li>
-          </ul>
-        </div>
-        <div class="item">
-          <h3>Product Designer — YouMate</h3>
-          <div class="when">Sep 2020 – Mar 2021 · Tehran, IR</div>
-          <ul>
-            <li>Managed & designed a web panel to analyze medical lab tests using OCR.</li>
-            <li>Developed OCR using Python (PaddleOCR, Tesseract); co‑created a medical‑lab dictionary.</li>
-          </ul>
-        </div>
-        <div class="item">
-          <h3>Research Assistant — Multi‑Center (Shiraz & Tehran)</h3>
-          <div class="when">Jan 2022 – Dec 2023</div>
-          <ul>
-            <li>Interviews with patients & providers; data cleaning and EHR entry.</li>
-            <li>Machine Learning and Deep Learning modeling.</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Projects Panel -->
-      <section class="panel theme-projects" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>Personalized Medicine National Document — Contributor</h3>
-            <p>Co‑authored guidance to enhance Personalized Medicine in Iran, inspired by global best practices.</p>
-          </div>
-          <div class="item">
-            <h3>CF Self‑Care App & Specialized EHR — Volunteer</h3>
-            <p>Managed development under the supervision of the Iran CF Foundation.</p>
-          </div>
-          <div class="item">
-            <h3>Digital Health Literacy — Academy of Medical Sciences</h3>
-            <p>Collaborated with the Digital Health Committee to create an infographic document.</p>
-          </div>
-          <div class="item">
-            <h3>Intelligent Leap (Top Team) — YouMate (2023)</h3>
-            <p>Recognized for the OCR‑powered web panel for lab test analytics.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Education Panel -->
-      <section class="panel theme-education" id="panel-education" role="tabpanel" aria-labelledby="tab-education">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>MSc — Medical Informatics</h3>
-            <div class="where">Shahid Beheshti University of Medical Sciences · Full Scholarship</div>
-            <div class="when">Oct 2020 – Dec 2023 · GPA 3.61/4</div>
-            <p><strong>Thesis:</strong> Application of Machine Learning in Breast Cancer Survival Prediction — a Multimethod & Multicenter Comparison.</p>
-          </div>
-          <div class="item">
-            <h3>BSc — Health Information Technology</h3>
-            <div class="where">Shiraz University of Medical Sciences · Full Scholarship</div>
-            <div class="when">Sep 2016 – Aug 2020 · GPA 3.55/4</div>
-            <p><strong>Thesis:</strong> Compliance of selected mental‑health virtual assistants with requirements.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Skills Panel -->
-      <section class="panel theme-skills" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>Core</h3>
-            <div class="tags"><span class="tag">AI</span><span class="tag">Machine Learning</span><span class="tag">LLMs</span><span class="tag">Precision Medicine</span><span class="tag">IoT</span><span class="tag">Gamification</span></div>
-          </div>
-          <div class="item">
-            <h3>Product & Design</h3>
-            <div class="tags"><span class="tag">Product Strategy</span><span class="tag">User Research</span><span class="tag">Figma</span><span class="tag">Benchmarking</span><span class="tag">Adobe Photoshop</span></div>
-          </div>
-          <div class="item">
-            <h3>Technical</h3>
-            <div class="tags"><span class="tag">Python</span><span class="tag">TensorFlow</span><span class="tag">scikit‑learn</span><span class="tag">Streamlit</span><span class="tag">Tesseract/PaddleOCR</span><span class="tag">MySQL</span><span class="tag">HTML/CSS</span><span class="tag">Postman</span><span class="tag">AI Agent Dev</span><span class="tag">RAG</span></div>
-          </div>
-          <div class="item">
-            <h3>Soft & Research</h3>
-            <div class="tags"><span class="tag">Teamwork</span><span class="tag">Presentation</span><span class="tag">Project Management</span><span class="tag">Problem Solving</span><span class="tag">Stress Management</span><span class="tag">Survey Design</span><span class="tag">Data Analysis</span><span class="tag">Interviewing</span><span class="tag">SPSS</span></div>
-          </div>
-          <div class="item">
-            <h3>Languages</h3>
-            <div class="tags"><span class="tag">Persian (Native)</span><span class="tag">English (IELTS 7)</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Publications Panel -->
-      <section class="panel theme-publications" id="panel-publications" role="tabpanel" aria-labelledby="tab-publications">
-        <div class="stripe"></div>
-        <div class="item">
-          <h3>Breast Cancer Survival Prediction (Multimethod)</h3>
-          <div class="when">Scientific Reports (Nature), 2024 — <a href="https://doi.org/10.1038/s41598-024-81734-y" target="_blank" rel="noopener">DOI</a></div>
-        </div>
-        <div class="item">
-          <h3>Deep Learning for 5‑year Survival in Women with Breast Cancer</h3>
-          <div class="when">Accepted, 17th Int’l Conf. on Health Informatics, 2024</div>
-        </div>
-        <div class="item">
-          <h3>Usability Evaluation of EMR of Rapid Response Team</h3>
-          <div class="when">Applied Health Information Technology Journal, 2021 — <a href="http://dx.doi.org/10.18502/ahit.v2i2.7991" target="_blank" rel="noopener">DOI</a></div>
-        </div>
-        <div class="item">
-          <h3>Healthcare Dashboards: Umbrella Review</h3>
-          <div class="when">Digital Health Journal, under review, 2025</div>
-        </div>
-        <div class="item">
-          <h3>Gamification in Personalized Health App</h3>
-          <div class="when">In progress, 2025</div>
-        </div>
-      </section>
-
-      <!-- Contact Panel -->
-      <section class="panel theme-contact" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">
-        <div class="stripe"></div>
-        <div class="grid">
-          <div class="item">
-            <h3>Contact</h3>
-            <p><strong>Email:</strong> <a href="mailto:mahyahamedi98@gmail.com">mahyahamedi98@gmail.com</a></p>
-            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/mahya-hamedi-2477641bb/overlay/about-this-profile/" target="_blank" rel="noopener">Mahya Hamedi</a></p>
+        <div class="profile-header">
+          <div></div> <!-- Spacer for grid alignment -->
+          
+          <div class="profile-info">
+            <h1 class="profile-name">Mahya Hamedi</h1>
+            <p class="profile-title">Digital Product Manager (DTC Genetics) & AI‑in‑Health Researcher</p>
             
+            <div class="profile-highlights">
+              <span class="highlight-badge">AI · ML · LLMs · RAG</span>
+              <span class="highlight-badge">Digital Health · Precision Medicine</span>
+              <span class="highlight-badge">UX · Product Strategy</span>
+            </div>
           </div>
-          <div class="item">
-            <h3>Download</h3>
-            <p><a class="btn primary" href="resume.pdf" download>Download my CV (PDF)</a></p>
+
+          <div class="profile-actions">
+            <a href="mailto:mahyahamedi98@gmail.com" class="action-btn action-btn-primary">📧 Email Me</a>
+            <a href="https://www.linkedin.com/in/mahya-hamedi-2477641bb/overlay/about-this-profile/" target="_blank" rel="noopener" class="action-btn action-btn-secondary">💼 LinkedIn</a>
+            <a href="resume.pdf" download class="action-btn action-btn-secondary">📄 Download CV</a>
+            
+            <div class="theme-toggle-wrapper" id="themeToggle" role="button" aria-label="Toggle dark mode" tabindex="0">
+              <span>☀️</span>
+              <div class="theme-toggle">
+                <div class="theme-toggle-knob"></div>
+              </div>
+              <span>🌙</span>
+            </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
 
- 
+    <!-- Tabbed Content Section -->
+    <section class="tabs-section">
+      <div class="tabs-container">
+        <!-- Tab Navigation -->
+        <nav class="tabs-nav" role="tablist" aria-label="Resume sections">
+          <button class="tab-button" role="tab" aria-selected="true" aria-controls="panel-summary" id="tab-summary">Summary</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-experience" id="tab-experience">Experience</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-projects" id="tab-projects">Projects</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-education" id="tab-education">Education</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-skills" id="tab-skills">Skills</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-publications" id="tab-publications">Publications</button>
+          <button class="tab-button" role="tab" aria-selected="false" aria-controls="panel-contact" id="tab-contact">Contact</button>
+        </nav>
+
+        <!-- Summary Panel -->
+        <div class="tab-panel active" id="panel-summary" role="tabpanel" aria-labelledby="tab-summary">
+          <div class="panel-header">
+            <h2 class="panel-title">Professional Summary</h2>
+            <div class="panel-accent"></div>
+          </div>
+          <div class="summary-content">
+            <p>
+              Digital Product Manager at a DTC genetic testing company (LifeandMe), building AI‑powered
+              health products from research to delivery. Experienced in user research, data pipelines, and
+              ML/LLM integration (fine‑tuning & retrieval‑augmented generation) to turn genomic and lifestyle
+              data into actionable recommendations and chat experiences.
+            </p>
+          </div>
+        </div>
+
+        <!-- Experience Panel -->
+        <div class="tab-panel" id="panel-experience" role="tabpanel" aria-labelledby="tab-experience">
+          <div class="panel-header">
+            <h2 class="panel-title">Professional Experience</h2>
+            <div class="panel-accent"></div>
+          </div>
+
+          <div class="timeline">
+            <article class="timeline-item">
+              <div class="timeline-header">
+                <h3 class="timeline-title">Digital Product Manager — LifeandMe</h3>
+                <div class="timeline-meta">
+                  <span class="timeline-meta-item">Sep 2022 – Present</span>
+                  <span class="timeline-meta-item">Tehran, IR</span>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <ul>
+                  <li>User research; managing Android app design providing health reports from genetic & epigenetic analysis.</li>
+                  <li>Explored interoperability standards and designed genetics databases & automation flows.</li>
+                  <li>Implemented LLM features (fine‑tuning + RAG) for recommendations and a user chatbot.</li>
+                  <li>Led a web panel for internal workflows (logistics, finance, CRM).</li>
+                  <li>Built WhatsApp automation tool and Telegram bot in Python for marketing/CRM.</li>
+                </ul>
+                <div class="timeline-tags">
+                  <span class="tag">Product Management</span>
+                  <span class="tag">Genomics</span>
+                  <span class="tag">Python</span>
+                  <span class="tag">LLMs/RAG</span>
+                  <span class="tag">Android</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-header">
+                <h3 class="timeline-title">Digital Product Manager — YouMate</h3>
+                <div class="timeline-meta">
+                  <span class="timeline-meta-item">Apr 2021 – Oct 2022</span>
+                  <span class="timeline-meta-item">Tehran, IR</span>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <ul>
+                  <li>Designed a health mobile‑app MVP.</li>
+                  <li>Co‑developed <em>CoWin</em> personalized PDF guidance for nutrition, exercise, mindful eating, and mental health (COVID‑19 prevention).</li>
+                </ul>
+                <div class="timeline-tags">
+                  <span class="tag">Mobile App Design</span>
+                  <span class="tag">Health Tech</span>
+                  <span class="tag">COVID-19</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-header">
+                <h3 class="timeline-title">Product Designer — YouMate</h3>
+                <div class="timeline-meta">
+                  <span class="timeline-meta-item">Sep 2020 – Mar 2021</span>
+                  <span class="timeline-meta-item">Tehran, IR</span>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <ul>
+                  <li>Managed & designed a web panel to analyze medical lab tests using OCR.</li>
+                  <li>Developed OCR using Python (PaddleOCR, Tesseract); co‑created a medical‑lab dictionary.</li>
+                </ul>
+                <div class="timeline-tags">
+                  <span class="tag">OCR</span>
+                  <span class="tag">Python</span>
+                  <span class="tag">Medical Analytics</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-header">
+                <h3 class="timeline-title">Research Assistant — Multi‑Center (Shiraz & Tehran)</h3>
+                <div class="timeline-meta">
+                  <span class="timeline-meta-item">Jan 2022 – Dec 2023</span>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <ul>
+                  <li>Interviews with patients & providers; data cleaning and EHR entry.</li>
+                  <li>Machine Learning and Deep Learning modeling.</li>
+                </ul>
+                <div class="timeline-tags">
+                  <span class="tag">Research</span>
+                  <span class="tag">Machine Learning</span>
+                  <span class="tag">Deep Learning</span>
+                  <span class="tag">EHR</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Projects Panel -->
+        <div class="tab-panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
+          <div class="panel-header">
+            <h2 class="panel-title">Notable Projects</h2>
+            <div class="panel-accent"></div>
+          </div>
+
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-icon">📋</div>
+              <h3 class="card-title">Personalized Medicine National Document — Contributor</h3>
+              <p class="card-description">
+                Co‑authored guidance to enhance Personalized Medicine in Iran, inspired by global best practices.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🏥</div>
+              <h3 class="card-title">CF Self‑Care App & Specialized EHR — Volunteer</h3>
+              <p class="card-description">
+                Managed development under the supervision of the Iran CF Foundation.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">📊</div>
+              <h3 class="card-title">Digital Health Literacy — Academy of Medical Sciences</h3>
+              <p class="card-description">
+                Collaborated with the Digital Health Committee to create an infographic document.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🏆</div>
+              <h3 class="card-title">Intelligent Leap (Top Team) — YouMate (2023)</h3>
+              <p class="card-description">
+                Recognized for the OCR‑powered web panel for lab test analytics.
+              </p>
+            </article>
+          </div>
+        </div>
+
+        <!-- Education Panel -->
+        <div class="tab-panel" id="panel-education" role="tabpanel" aria-labelledby="tab-education">
+          <div class="panel-header">
+            <h2 class="panel-title">Education</h2>
+            <div class="panel-accent"></div>
+          </div>
+
+          <div class="timeline">
+            <article class="timeline-item">
+              <div class="timeline-header">
+                <h3 class="timeline-title">MSc — Medical Informatics</h3>
+                <div class="timeline-meta">
+                  <span class="timeline-meta-item">Oct 2020 – Dec 2023</span>
+                  <span class="timeline-meta-item">Shahid Beheshti University of Medical Sciences</span>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <p class="timeline-description">
+                  <strong>Full Scholarship · GPA 3.61/4</strong>
+                </p>
+                <p class="timeline-description">
+                  <strong>Thesis:</strong> Application of Machine Learning in Breast Cancer Survival Prediction — a Multimethod & Multicenter Comparison.
+                </p>
+              </div>
+            </article>
+
+            <article class="timeline-item">
+              <div class="timeline-header">
+                <h3 class="timeline-title">BSc — Health Information Technology</h3>
+                <div class="timeline-meta">
+                  <span class="timeline-meta-item">Sep 2016 – Aug 2020</span>
+                  <span class="timeline-meta-item">Shiraz University of Medical Sciences</span>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <p class="timeline-description">
+                  <strong>Full Scholarship · GPA 3.55/4</strong>
+                </p>
+                <p class="timeline-description">
+                  <strong>Thesis:</strong> Compliance of selected mental‑health virtual assistants with requirements.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Skills Panel -->
+        <div class="tab-panel" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills">
+          <div class="panel-header">
+            <h2 class="panel-title">Skills & Expertise</h2>
+            <div class="panel-accent"></div>
+          </div>
+
+          <div class="card-grid">
+            <article class="card">
+              <div class="card-icon">🤖</div>
+              <h3 class="card-title">Core Technologies</h3>
+              <div class="skill-tags">
+                <span class="skill-tag">AI</span>
+                <span class="skill-tag">Machine Learning</span>
+                <span class="skill-tag">LLMs</span>
+                <span class="skill-tag">Precision Medicine</span>
+                <span class="skill-tag">IoT</span>
+                <span class="skill-tag">Gamification</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🎨</div>
+              <h3 class="card-title">Product & Design</h3>
+              <div class="skill-tags">
+                <span class="skill-tag">Product Strategy</span>
+                <span class="skill-tag">User Research</span>
+                <span class="skill-tag">Figma</span>
+                <span class="skill-tag">Benchmarking</span>
+                <span class="skill-tag">Adobe Photoshop</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">💻</div>
+              <h3 class="card-title">Technical Skills</h3>
+              <div class="skill-tags">
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">TensorFlow</span>
+                <span class="skill-tag">scikit‑learn</span>
+                <span class="skill-tag">Streamlit</span>
+                <span class="skill-tag">Tesseract/PaddleOCR</span>
+                <span class="skill-tag">MySQL</span>
+                <span class="skill-tag">HTML/CSS</span>
+                <span class="skill-tag">Postman</span>
+                <span class="skill-tag">AI Agent Dev</span>
+                <span class="skill-tag">RAG</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🎯</div>
+              <h3 class="card-title">Soft & Research Skills</h3>
+              <div class="skill-tags">
+                <span class="skill-tag">Teamwork</span>
+                <span class="skill-tag">Presentation</span>
+                <span class="skill-tag">Project Management</span>
+                <span class="skill-tag">Problem Solving</span>
+                <span class="skill-tag">Stress Management</span>
+                <span class="skill-tag">Survey Design</span>
+                <span class="skill-tag">Data Analysis</span>
+                <span class="skill-tag">Interviewing</span>
+                <span class="skill-tag">SPSS</span>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🌍</div>
+              <h3 class="card-title">Languages</h3>
+              <div class="skill-tags">
+                <span class="skill-tag">Persian (Native)</span>
+                <span class="skill-tag">English (IELTS 7)</span>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Publications Panel -->
+        <div class="tab-panel" id="panel-publications" role="tabpanel" aria-labelledby="tab-publications">
+          <div class="panel-header">
+            <h2 class="panel-title">Publications & Research</h2>
+            <div class="panel-accent"></div>
+          </div>
+
+          <article class="publication-item">
+            <h3 class="publication-title">Breast Cancer Survival Prediction (Multimethod)</h3>
+            <p class="publication-meta">Scientific Reports (Nature), 2024</p>
+            <a href="https://doi.org/10.1038/s41598-024-81734-y" target="_blank" rel="noopener" class="publication-link">
+              View Publication
+            </a>
+          </article>
+
+          <article class="publication-item">
+            <h3 class="publication-title">Deep Learning for 5‑year Survival in Women with Breast Cancer</h3>
+            <p class="publication-meta">Accepted, 17th International Conference on Health Informatics, 2024</p>
+          </article>
+
+          <article class="publication-item">
+            <h3 class="publication-title">Usability Evaluation of EMR of Rapid Response Team</h3>
+            <p class="publication-meta">Applied Health Information Technology Journal, 2021</p>
+            <a href="http://dx.doi.org/10.18502/ahit.v2i2.7991" target="_blank" rel="noopener" class="publication-link">
+              View Publication
+            </a>
+          </article>
+
+          <article class="publication-item">
+            <h3 class="publication-title">Healthcare Dashboards: Umbrella Review</h3>
+            <p class="publication-meta">Digital Health Journal, under review, 2025</p>
+          </article>
+
+          <article class="publication-item">
+            <h3 class="publication-title">Gamification in Personalized Health App</h3>
+            <p class="publication-meta">In progress, 2025</p>
+          </article>
+        </div>
+
+        <!-- Contact Panel -->
+        <div class="tab-panel" id="panel-contact" role="tabpanel" aria-labelledby="tab-contact">
+          <div class="panel-header">
+            <h2 class="panel-title">Get In Touch</h2>
+            <div class="panel-accent"></div>
+          </div>
+
+          <div class="contact-grid">
+            <article class="contact-card">
+              <div class="contact-icon">📧</div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value">mahyahamedi98@gmail.com</div>
+              <a href="mailto:mahyahamedi98@gmail.com" class="contact-link">Send Email</a>
+            </article>
+
+            <article class="contact-card">
+              <div class="contact-icon">💼</div>
+              <div class="contact-label">LinkedIn</div>
+              <div class="contact-value">Mahya Hamedi</div>
+              <a href="https://www.linkedin.com/in/mahya-hamedi-2477641bb/overlay/about-this-profile/" target="_blank" rel="noopener" class="contact-link">View Profile</a>
+            </article>
+
+            <article class="contact-card">
+              <div class="contact-icon">📄</div>
+              <div class="contact-label">Resume</div>
+              <div class="contact-value">Download PDF Version</div>
+              <a href="resume.pdf" download class="contact-link">Download CV</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <script>
-    // Wrap logic in an IIFE to avoid global re-declarations
-    (()=>{
-      // --- Tabs logic with ARIA ---
-      const tabs = document.querySelectorAll('.tab');
-      const panels = document.querySelectorAll('.panel');
-      const tabIds = Array.from(tabs).map(t=>t.id.replace('tab-',''));
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">© 2025 Mahya Hamedi. All rights reserved. Built with passion for innovation in health technology.</p>
+    </div>
+  </footer>
 
-      function activateTab(id,{focusTab=false}={}){
-        tabs.forEach(t=>{
-          const sel = t.id === 'tab-'+id;
-          t.setAttribute('aria-selected', sel);
-          if(sel && focusTab) t.focus();
+  <!-- JavaScript -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ===================================
+      // TAB NAVIGATION
+      // ===================================
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+      const tabIds = Array.from(tabButtons).map(btn => btn.id.replace('tab-', ''));
+
+      function activateTab(tabId, options = {}) {
+        const { focusTab = false } = options;
+
+        // Update buttons
+        tabButtons.forEach(btn => {
+          const isActive = btn.id === `tab-${tabId}`;
+          btn.setAttribute('aria-selected', isActive);
+          if (isActive && focusTab) {
+            btn.focus();
+          }
         });
-        panels.forEach(p=>{ p.classList.toggle('active', p.id === 'panel-'+id); });
-        // persist
-        try{ localStorage.setItem('activeTab', id); }catch(e){}
-        // reflect in hash (nice for sharing links)
-        if(location.hash !== '#'+id){
-          history.replaceState(null, '', '#'+id);
+
+        // Update panels
+        tabPanels.forEach(panel => {
+          panel.classList.toggle('active', panel.id === `panel-${tabId}`);
+        });
+
+        // Persist to localStorage
+        try {
+          localStorage.setItem('activeTab', tabId);
+        } catch (e) {
+          console.warn('localStorage not available:', e);
+        }
+
+        // Update URL hash
+        if (window.location.hash !== `#${tabId}`) {
+          window.history.replaceState(null, '', `#${tabId}`);
         }
       }
 
-      tabs.forEach((t,idx)=>{
-        t.addEventListener('click', ()=>activateTab(t.id.replace('tab-','')));
-        t.addEventListener('keydown', e=>{
-          const key = e.key;
-          if(key==='Enter' || key===' '){ e.preventDefault(); activateTab(t.id.replace('tab-','')); }
-          // Arrow navigation
-          if(key==='ArrowRight' || key==='ArrowLeft'){
+      // Attach event listeners
+      tabButtons.forEach((btn, index) => {
+        // Click handler
+        btn.addEventListener('click', () => {
+          const tabId = btn.id.replace('tab-', '');
+          activateTab(tabId);
+        });
+
+        // Keyboard navigation
+        btn.addEventListener('keydown', (e) => {
+          const tabId = btn.id.replace('tab-', '');
+
+          if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            const dir = key==='ArrowRight' ? 1 : -1;
-            const next = (idx + dir + tabs.length) % tabs.length;
-            activateTab(tabs[next].id.replace('tab-',''), {focusTab:true});
+            activateTab(tabId);
+          }
+
+          // Arrow key navigation
+          if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const direction = e.key === 'ArrowRight' ? 1 : -1;
+            const nextIndex = (index + direction + tabButtons.length) % tabButtons.length;
+            const nextTabId = tabButtons[nextIndex].id.replace('tab-', '');
+            activateTab(nextTabId, { focusTab: true });
           }
         });
       });
 
-      // restore last tab (hash wins, then localStorage)
-      const fromHash = location.hash && location.hash.slice(1);
-      const saved = !fromHash && localStorage.getItem('activeTab');
-      const initial = (fromHash && tabIds.includes(fromHash)) ? fromHash : (saved && tabIds.includes(saved) ? saved : 'summary');
-      if(initial !== 'summary') activateTab(initial);
+      // Restore last active tab
+      function restoreActiveTab() {
+        const hashTab = window.location.hash ? window.location.hash.slice(1) : null;
+        const savedTab = localStorage.getItem('activeTab');
+        const initialTab = (hashTab && tabIds.includes(hashTab)) 
+          ? hashTab 
+          : (savedTab && tabIds.includes(savedTab)) 
+            ? savedTab 
+            : 'summary';
 
-      // --- Theme toggle (light/dark) with prefers-color-scheme ---
-      const root = document.documentElement;
-      const switchEl = document.getElementById('themeSwitch');
-      function applyTheme(mode){
-        if(mode==='dark'){ root.classList.add('dark'); switchEl.setAttribute('aria-pressed','true'); }
-        else { root.classList.remove('dark'); switchEl.setAttribute('aria-pressed','false'); }
+        if (initialTab !== 'summary') {
+          activateTab(initialTab);
+        }
       }
-      (function(){
-        const savedMode = localStorage.getItem('colorMode');
-        if(savedMode){ applyTheme(savedMode); }
-        else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){ applyTheme('dark'); }
-      })();
-      function toggleTheme(){
-        const dark = root.classList.toggle('dark');
-        applyTheme(dark?'dark':'light');
-        try{ localStorage.setItem('colorMode', dark?'dark':'light'); }catch(e){}
+
+      restoreActiveTab();
+
+      // Handle browser back/forward
+      window.addEventListener('hashchange', () => {
+        const hashTab = window.location.hash.slice(1);
+        if (hashTab && tabIds.includes(hashTab)) {
+          activateTab(hashTab);
+        }
+      });
+
+      // ===================================
+      // THEME TOGGLE
+      // ===================================
+      const themeToggle = document.getElementById('themeToggle');
+      const htmlElement = document.documentElement;
+
+      function setTheme(theme) {
+        if (theme === 'dark') {
+          htmlElement.classList.add('dark');
+          themeToggle.setAttribute('aria-pressed', 'true');
+        } else {
+          htmlElement.classList.remove('dark');
+          themeToggle.setAttribute('aria-pressed', 'false');
+        }
+
+        try {
+          localStorage.setItem('theme', theme);
+        } catch (e) {
+          console.warn('localStorage not available:', e);
+        }
       }
-      switchEl.addEventListener('click', toggleTheme);
-      switchEl.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleTheme(); }});
 
-      // footer date
-      (function(){
-        const d=new Date();
-        document.getElementById('today').textContent = d.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'2-digit'});
-      })();
+      function toggleTheme() {
+        const isDark = htmlElement.classList.contains('dark');
+        setTheme(isDark ? 'light' : 'dark');
+      }
 
-      // --- Lightweight Self Tests (non-intrusive) ---
-      // These tests validate key behaviors without altering the final state.
-      (function runSelfTests(){
-        try{
-          const results = [];
-          // T1: tabs exist and panels exist
-          results.push(['T1_tabs_present', tabs.length>0 && panels.length>0]);
-          // T2: activate a tab programmatically and revert
-          const activeBefore = (localStorage.getItem('activeTab')||'summary');
-          activateTab('experience');
-          const t2 = document.getElementById('panel-experience').classList.contains('active');
-          results.push(['T2_activate_experience', t2]);
-          activateTab(activeBefore);
-          // T3: theme toggle flips class
-          const wasDark = document.documentElement.classList.contains('dark');
+      // Initialize theme
+      function initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme) {
+          setTheme(savedTheme);
+        } else if (prefersDark) {
+          setTheme('dark');
+        }
+      }
+
+      initTheme();
+
+      // Event listeners
+      themeToggle.addEventListener('click', toggleTheme);
+      themeToggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
           toggleTheme();
-          const t3 = document.documentElement.classList.contains('dark') !== wasDark;
-          results.push(['T3_theme_toggle', t3]);
-          // revert theme
-          toggleTheme();
-          // Log concise report
-          const allPass = results.every(([_, ok])=>ok);
-          console.log('[Self‑Test]', Object.fromEntries(results), 'ALL_PASS=', allPass);
-        }catch(err){ console.warn('[Self‑Test] skipped:', err); }
-      })();
+        }
+      });
+
+      // ===================================
+      // SMOOTH SCROLL FOR ANCHOR LINKS
+      // ===================================
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href !== '#' && href.length > 1) {
+            const targetId = href.slice(1);
+            if (tabIds.includes(targetId)) {
+              e.preventDefault();
+              activateTab(targetId);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }
+        });
+      });
+
+      // ===================================
+      // PERFORMANCE OPTIMIZATION
+      // ===================================
+      // Reduce animations for users who prefer reduced motion
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.style.setProperty('scroll-behavior', 'auto');
+      }
+
+      console.log('✨ Resume website initialized successfully!');
     })();
   </script>
 </body>
 </html>
+
